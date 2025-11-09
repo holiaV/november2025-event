@@ -1,0 +1,574 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>マジョリティゲーム</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #0f1a2b;
+      padding: 2em;
+      line-height: 1.8;
+      color: #dfe6f1;
+    }
+    .main-title {
+      font-size: 2em;
+      color: #4a90e2;
+      margin: 0;
+      text-shadow: 2px 2px 6px #000000;
+    }
+    .sub-title {
+      font-size: 1.2em;
+      color: #8fb3ff;
+      margin: 0 0 1.5em 0;
+    }
+    .section {
+      margin-bottom: 2em;
+      padding: 1em;
+      background-color: #192a40; 
+      border-radius: 10px;
+      border-left: 4px solid #4a6fa5;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+    h2 {
+      color: #7fb4ff;
+      border-bottom: 2px solid #4a6fa5;
+      padding-bottom: 0.3em;
+      margin-bottom: 0.5em;
+    }
+    ul {
+      list-style-type: square;
+      padding-left: 1.5em;
+    }
+    table {
+      border-collapse: collapse;
+      margin: 1em 0;
+      width: 100%;
+      max-width: 700px;
+    }
+    th, td {
+      border: 1px solid #4a6fa5;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #243856;
+    }
+    .accent {
+      color: #c63c3c;
+      font-weight: bold;
+    }
+    .note {
+      font-style: italic;
+      color: #b7c6ff;
+      margin-top: 0.5em;
+    }
+    .expansion-title {
+      font-size: 2.6em;
+      font-weight: bold;
+      display: inline-block;
+      margin: 18px 0;
+      text-align: left;
+      width: 100%;
+      }
+    .a-realm-reborn {
+      font-family: 'Georgia', serif;
+      color: #e91e63;
+      text-shadow: 0 0 8px rgba(233, 30, 99, 0.5), 2px 2px 4px #000;
+      letter-spacing: 2px;
+      }
+    .heavensward {
+      font-family: 'Times New Roman', serif;
+      color: #3f51b5;
+      text-shadow: 0 0 12px rgba(63, 81, 181, 0.6), 2px 2px 6px #000;
+      font-style: italic;
+      }
+    .stormblood {
+      font-family: 'Impact', sans-serif;
+      color: #ff7043;
+      text-shadow: 0 0 6px rgba(255, 112, 67, 0.7), 3px 3px 6px #330000;
+      }
+    .shadowbringers {
+      font-family: 'Trajan Pro', serif;
+      color: #ccbfff;
+      text-shadow: 0 0 14px rgba(80, 40, 150, 0.9), 3px 3px 8px #000;
+      letter-spacing: 3px;
+      }
+    .endwalker {
+      font-family: 'Garamond', serif;
+      color: #ffd54f;
+      text-shadow: 0 0 10px rgba(255, 213, 79, 0.7), 2px 2px 6px #333;
+      }
+    .dawnbreak {
+      font-family: 'Palatino Linotype', serif;
+      color: #ffeb3b;
+      text-shadow: 0 0 15px rgba(255, 235, 59, 0.8), 3px 3px 7px #8a6d00;
+      letter-spacing: 1px;
+      }
+    .question-card {
+        margin-bottom: 2em;
+        padding: 1em;
+        background-color: #2a2a40;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .question-card h2 {
+        font-size: 1.25em;
+        color: #3498db;
+        margin-bottom: 1em;
+        text-shadow: 1px 1px 3px #111;
+    }
+    .question-card .main-image {
+        width: 75%;
+        max-width: 1920px;
+        height: auto;
+        margin-bottom: 1em;
+    }
+    .question-card ul.options {
+        list-style: none;
+        padding: 0;
+    }
+    .question-card ul.options li {
+        background-color: #3a3a5a;
+        border: 2px solid #3498db;
+        border-radius: 10px;
+        padding: 0.5em;
+        width: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        margin-bottom: 1em;
+    }
+    .question-card ul.options li img {
+        width: 64px;
+        height: 64px;
+        display: block;
+        margin-bottom: 0.5em;
+    }
+    .question-card ul.options li span {
+        display: block;
+        font-size: 0.9em;
+        color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="main-title">★マジョリティゲーム</h1>
+  <h2 class="sub-title">～空気を読み、メタを読み、多数派になりきれ～</h2>
+
+  <div class="section">
+    <h2>◆ 目的 ⭐</h2>
+    <ul>
+    <li>複数の選択肢の中から「多数派」だと思われる選択を取り続ける<br>
+    <img src="ペストリーフィッシュ.png" alt="ペストリーフィッシュ" style="width:75px; margin-top: 0.5em;">
+    </li>
+  </div>
+
+  <div class="section">
+    <h2>◆ 参加資格 ✋</h2>
+    <ul>
+      <li>ミラージュプリズム解放済み</li>
+      <li>ある程度ジョブやクラスを開放している</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>◆ 勝利条件 👑</h2>
+    <ul>
+      <li>最もスコアを稼いだチームが勝利となります。</li>
+      <li>スコアの基準は後述します。</li>
+    </ul>
+  </div>
+  
+  <div class="section">
+    <h2>◆ ミラプリテーマ👚</h2>
+    <ol>
+      今回のテーマは以下の６種類から１種類を選択して用意してください。<br>
+      <div class="expansion-title a-realm-reborn">新生のエオルゼア</div>
+      <div class="expansion-title heavensward">蒼天のイシュガルド</div>
+      <div class="expansion-title stormblood">紅蓮のリベレーター</div>
+      <div class="expansion-title shadowbringers">漆黒のヴィランズ</div>
+      <div class="expansion-title endwalker">暁月のフィナーレ</div>
+      <div class="expansion-title dawnbreak">黄金のレガシー</div>
+      です。<br>
+      前回同様に複数作っていただいても問題ありませんが評価対象は１種類のみになります。<br>
+      今回は多数派を選ぶコンセプトですが、被ったら被ったでどうやって差をつけるか見どころですねぇ！<br>
+      …また難しいこと言ってる気がする。<br>
+      評価項目<br>
+      ✦「選択したテーマに沿っている」<br>
+      　変に逆張りせずに王道を攻めていいと思います。<br>
+      　でも、逆張りしつつも違和感を持たせずに納得させたらめちゃくちゃカッコいいですね。(無茶振り)<br>
+      ✦「ビジュが好み(カッコいい・可愛い)」<br>
+      　前回と同じく投票者の好みに刺さるかどうかの評価。<br>
+      　種族が好みとかモチーフが好みとか、色使いが好みとかそんなんで全然OK。(コピペ)<br>
+      ✦「ユニーク(個性的)さ」<br>
+      　発想の柔軟さや各パーツの個性的な使い方をしているかどうかの評価<br>
+      　多分一番難しいと思う。難しく考えすぎないで。(コピペ)<br>
+      　前回の"猫耳を狼と言い張り月で地球に吠えた狼男"はこの票をほぼ独占しました。カッコいい。<br>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>◆ 賞金 💰</h2>
+    <label for="totalPrize">賞金総額（ギル）※個人戦非対応:</label>
+    <input type="number" id="totalPrize" value="2000000" style="width: 150px;">
+    <label for="participantCount">参加人数:</label>
+    <select id="participantCount">
+      <option value="4">4名</option>
+      <option value="5">5名</option>
+      <option value="6">6名</option>
+      <option value="7">7名</option>
+      <option value="8">8名</option>
+      <option value="9">9名</option>
+      <option value="10">10名</option>
+      <option value="11">11名</option>
+      <option value="12">12名</option>
+    </select>
+    <button onclick="calculatePrize()">計算</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>勝者</th>
+          <th>それ以外</th>
+          <th>優勝チーム賞金</th>
+          <th>参加賞</th>
+        </tr>
+      </thead>
+      <tbody id="resultBody"></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>◆ チーム分け 🧑‍🤝‍🧑</h2>
+    <p><strong>ダイスで完全ランダム</strong><br>
+    「/random」コマンドで出た数値の昇順で決定する。<br>
+    例：900 800 700 600 → 900＆800チーム、700＆600チーム</p>
+
+    <p><strong>参加人数が素数になったら？</strong><br>
+    今回は参加人数が素数になった場合、チーム戦を辞めて個人戦に切り替えます。<br><br>
+    個人戦になった場合、1位、2位、3位に賞金を、それ以外の方に参加賞を。という形に切り替えます。
+
+    <p><strong>参加者人数とチーム構成：</strong><br>
+      4名：2 vs 2<br>
+      5名：1 vs 1 vs 1 vs 1 vs 1<br>
+      6名：2 vs 2 vs 2<br>
+      7名：1 vs 1 vs 1 vs 1 vs 1 vs 1 vs 1<br>
+      8名：2 vs 2 vs 2 vs 2<br>
+      9名：3 vs 3 vs 3<br>
+      10名：2 vs 2 vs 2 vs 2 vs 2<br>
+      11名：1 vs 1 vs 1 vs 1 vs 1 vs 1 vs 1 vs 1 vs 1 vs 1 vs 1</span><br>
+      12名：2 vs 2 vs 2 vs 2 vs 2 vs 2</p>
+  </div>
+  
+  <div class="section">
+    <h2>◆ ゲームの流れ🔄</h2>
+    <ul>
+      <li>
+          参加者は下記の１０個のお題から、それぞれの回答を用意しておく。<br>
+          イベント当日、実際に１０問回答する。<br>
+          発表タイミングでの回答状況に応じてスコアを付与。<br>
+          チームメンバーとのスコアを合算し最もスコアが高いチームが優勝！
+      </li>
+      <li>
+          進行<br>
+          <img src="進行１.png" alt="進行" style="width:600px; margin-top: 0.5em;"><br>
+          <img src="進行２.png" alt="進行" style="width:600px; margin-top: 0.5em;"><br>
+          <img src="進行３.png" alt="進行" style="width:600px; margin-top: 0.5em;"><br>
+      </li>
+      <li>
+          スコアについて<br>
+          選んだ回答が多数派だった場合、２ｐｔ獲得する。<br>
+          ただし、多数派が同率で複数いた場合、獲得スコアは１ｐｔになる。<br>
+          <img src="多数派スコア画像.png" alt="多数派スコア画像" style="width:600px; margin-top: 0.5em;"><br>
+          ♦上の画像(左)の場合、<br>
+          モーグリを選んだ人が４人<br>
+          チョコボを選んだ人が２人<br>
+          サボテンダーを選んだ人が１人<br>
+          マイカを選んだ人が２人<br>
+          となっている。<br>
+          この場合はモーグリを選んだ４人が多数派の為、その４人が２ｐｔ獲得する。<br>
+          ♦上の画像(右)の場合、<br>
+          モーグリを選んだ人が３人<br>
+          チョコボを選んだ人が３人<br>
+          サボテンダーを選んだ人が１人<br>
+          マイカを選んだ人が３人<br>
+          となっている。<br>
+          この場合は多数派が２種類以上存在しているため、モーグリ、チョコボ、マイカを選んだ９人が１ｐ獲得する。<br>
+          
+      </li>
+      <li>
+          逆張りボーナスについて<br>
+          全プレイヤーに１回ずつ「逆張り宣言」をするチャンスがあります。<br>
+          お題が発表され、全員が着替えて回答を確定した後に任意で使用できます。<br>
+          逆張り宣言をしたお題では唯一かつ最も少数派回答だった場合ボーナスで３ｐｔ獲得できます。<br>
+          逆張り宣言をしたお題で最も少数派回答だったが同率がいた場合ボーナスは１ｐｔになります。<br>
+          ただし、逆張り宣言をしたお題では多数派だったとしても通常の２ｐｔは得られません。<br>
+          <img src="逆張り宣言画像１.png" alt="逆張り宣言画像" style="width:600px; margin-top: 0.5em;"><br>
+          ♦上の画像(左)の場合、<br>
+          モーグリを選んだ人が４人<br>
+          チョコボを選んだ人が２人<br>
+          サボテンダーを選んだ人が１人<br>
+          マイカを選んだ人が２人<br>
+          となっている。<br>
+          この場合はモーグリを選んだ４人が２ｐｔ獲得するのは変わりないが、<br>
+          サボテンダーを選んだ人が逆張り宣言をしている為、逆張り成功で３ｐｔ獲得する。<br>
+          ♦上の画像(右)の場合、<br>
+          モーグリを選んだ人が４人<br>
+          チョコボを選んだ人が２人<br>
+          サボテンダーを選んだ人が２人<br>
+          マイカを選んだ人が２人<br>
+          となっている。<br>
+          この場合はまずモーグリを選んだ４人が２ｐｔ獲得する。<br>
+          サボテンダーを選んだ人が逆張り宣言をして、最少数派ではあるが唯一の最少数派ではないので<br>
+          逆張り宣言した人の獲得スコアは１ｐｔになる。<br>
+          個人視点で見た場合は以下のようになります。<br>
+          <img src="逆張り宣言画像２.png" alt="逆張り宣言画像" style="width:600px; margin-top: 0.5em;"><br>
+          逆張り宣言で３ｐｔ稼げるのは上の画像のように<br>
+          「自分が選んだ回答が最も少ない」<br>
+          かつ<br>
+          「最も少ない回答が自分が選んだ回答のみ」<br>
+          といった場合のみになります。<br>
+          １票がバラけやすい後半のお題になるにつれてどんどん使いづらくなっていくと思われます。<br>
+          <img src="逆張り宣言画像３.png" alt="逆張り宣言画像" style="width:600px; margin-top: 0.5em;"><br>
+          事前に「このお題は逆張り狙いで行こう…！」と考えておくといいんじゃないでしょうか。<br>
+          もちろん使わないという選択肢もありです。
+      </li>
+  </div>
+
+  <div class="section">
+    <h2>◆ お題一覧(全１０問)💭</h2>
+    <ul style="list-style: none; padding: 0; font-family: 'Segoe UI', sans-serif;">
+
+      <div class="question-card">
+          <h2>Q01<br>◉任意の鉄仮面装備を「シャインゴールド」または「シャインシルバー」に染色してください。</h2>
+          <img class="main-image" src="Q01.png" alt="Q01画像">
+          <ul class="options">
+              <li><img src="1-1.png" alt="1-1"><span>シャインゴールド</span></li>
+              <li><img src="1-2.png" alt="1-2"><span>シャインシルバー</span></li>
+          </ul>
+      </div>
+      
+      <div class="question-card">
+          <h2>Q02<br>◉「タンク」「ヒーラー」「ＤＰＳ」いずれかのロールになってください。</h2>
+          <img class="main-image" src="Q02.png" alt="Q02画像">
+          <ul class="options">
+              <li><img src="2-1.png" alt="2-1"><span>タンク</span></li>
+              <li><img src="2-2.png" alt="2-2"><span>ヒーラー</span></li>
+              <li><img src="2-3.png" alt="2-3"><span>ＤＰＳ</span></li>
+          </ul>
+      </div>
+      
+      <div class="question-card">
+          <h2>Q03<br>◉プレーンを除くいずれかのデイリーチュニックに着替えてください。<br>※サイズはどれでも可 染色はご自由に</h2>
+          <img class="main-image" src="Q03.png" alt="Q03画像">
+          <ul class="options">
+              <li><img src="3-1.png" alt="3-1"><span>モーグリ</span></li>
+              <li><img src="3-2.png" alt="3-2"><span>チョコボ</span></li>
+              <li><img src="3-3.png" alt="3-3"><span>サボテンダー</span></li>
+              <li><img src="3-4.png" alt="3-4"><span>マイカ・ザ・ムー</span></li>
+          </ul>
+      </div>
+      
+      <div class="question-card">
+          <h2>Q04<br>◉いずれかのキャスタージョブになってください。<br>※クラスでも可</h2>
+          <img class="main-image" src="Q04.png" alt="Q04画像">
+          <ul class="options">
+              <li><img src="4-1.png" alt="4-1"><span>黒魔道士/呪術士</span></li>
+              <li><img src="4-2.png" alt="4-2"><span>召喚士/巴術士</span></li>
+              <li><img src="4-3.png" alt="4-3"><span>赤魔導士</span></li>
+              <li><img src="4-4.png" alt="4-4"><span>ピクトマンサー</span></li>
+              <li><img src="4-5.png" alt="4-5"><span>青魔道士</span></li>
+          </ul>
+      </div>
+      
+      <div class="question-card">
+          <h2>Q05<br>◉用意して頂いたミラプリテーマに着替えてください。</h2>
+          <img class="main-image" src="Q05.png" alt="Q05画像">
+          <ul class="options">
+              <li><img src="5-1.png" alt="5-1"><span>新生のエオルゼア</span></li>
+              <li><img src="5-2.png" alt="5-2"><span>蒼天のイシュガルド</span></li>
+              <li><img src="5-3.png" alt="5-3"><span>紅蓮のリベレーター</span></li>
+              <li><img src="5-4.png" alt="5-4"><span>漆黒のヴィランズ</span></li>
+              <li><img src="5-5.png" alt="5-5"><span>暁月のフィナーレ</span></li>
+              <li><img src="5-6.png" alt="5-6"><span>黄金のレガシー</span></li>
+          </ul>
+      </div>
+      
+      <div class="question-card">
+          <h2>Q06<br>◉蒼天極産の光る武器を装備してください。</h2>
+          <img class="main-image" src="Q06.png" alt="Q06画像">
+          <ul class="options">
+              <li><img src="6-1.png" alt="6-1"><span>ビスマルク(エクスパンス◯◯)</span></li>
+              <li><img src="6-2.png" alt="6-2"><span>ラーヴァナ(ハイヴ◯◯)</span></li>
+              <li><img src="6-3.png" alt="6-3"><span>ナイツ・オブ・ラウンド(◯◯・オブ・ラウンド)</span></li>
+              <li><img src="6-4.png" alt="6-4"><span>ニーズヘッグ(ホード◯◯)</span></li>
+              <li><img src="6-5.png" alt="6-5"><span>セフィロト(◯◯・オブ・フィーンド)</span></li>
+              <li><img src="6-6.png" alt="6-6"><span>ソフィア(◯◯・オブ・ゴッデス)</span></li>
+              <li><img src="6-7.png" alt="6-7"><span>ズルワーン(◯◯・オブ・デモン)</span></li>
+          </ul>
+      </div>
+      
+      <div class="question-card">
+          <h2>Q07<br>◉いずれかのタンクジョブまたはヒーラージョブになってください。<br>※クラスでも可</h2>
+          <img class="main-image" src="Q07.png" alt="Q07画像">
+          <ul class="options">
+              <li><img src="7-1.png" alt="7-1"><span>ナイト/剣術士</span></li>
+              <li><img src="7-2.png" alt="7-2"><span>戦士/斧術士</span></li>
+              <li><img src="7-3.png" alt="7-3"><span>暗黒騎士</span></li>
+              <li><img src="7-4.png" alt="7-4"><span>ガンブレイカー</span></li>
+              <li><img src="7-5.png" alt="7-5"><span>白魔道士/幻術士</span></li>
+              <li><img src="7-6.png" alt="7-6"><span>学者</span></li>
+              <li><img src="7-7.png" alt="7-7"><span>占星術師</span></li>
+              <li><img src="7-8.png" alt="7-8"><span>賢者</span></li>
+          </ul>
+      </div>
+      
+      <div class="question-card">
+          <h2>Q08<br>◉いずれかの物理DPS(メレー・レンジ)ジョブになってください。<br>※クラスでも可</h2>
+          <img class="main-image" src="Q08.png" alt="Q08画像">
+          <ul class="options">
+              <li><img src="8-1.png" alt="8-1"><span>モンク/格闘士</span></li>
+              <li><img src="8-2.png" alt="8-2"><span>竜騎士/槍術士</span></li>
+              <li><img src="8-3.png" alt="8-3"><span>忍者/双剣士</span></li>
+              <li><img src="8-4.png" alt="8-4"><span>侍</span></li>
+              <li><img src="8-5.png" alt="8-5"><span>リーパー</span></li>
+              <li><img src="8-6.png" alt="8-6"><span>ヴァイパー</span></li>
+              <li><img src="8-7.png" alt="8-7"><span>吟遊詩人/弓術士</span></li>
+              <li><img src="8-8.png" alt="8-8"><span>機工士</span></li>
+              <li><img src="8-9.png" alt="8-9"><span>踊り子</span></li>
+          </ul>
+      </div>
+      
+      <div class="question-card">
+          <h2>Q09<br>◉デイリーチュニックを配られたカララントで染めてください。<br>※サイズはどれでも可</h2>
+          <img class="main-image" src="Q09.png" alt="Q09画像">
+          <ul class="options">
+              <li><img src="9-1.png" alt="9-1"><span>チェリーピンク</span></li>
+              <li><img src="9-2.png" alt="9-2"><span>ダラガブレッド</span></li>
+              <li><img src="9-3.png" alt="9-3"><span>サンセットオレンジ</span></li>
+              <li><img src="9-4.png" alt="9-4"><span>ハニーイエロー</span></li>
+              <li><img src="9-5.png" alt="9-5"><span>アップルグリーン</span></li>
+              <li><img src="9-6.png" alt="9-6"><span>オチューグリーン</span></li>
+              <li><img src="9-7.png" alt="9-7"><span>スカイブルー</span></li>
+              <li><img src="9-8.png" alt="9-8"><span>ストームブルー</span></li>
+              <li><img src="9-9.png" alt="9-9"><span>ラベンダーブルー</span></li>
+              <li><img src="9-10.png" alt="9-10"><span>リーガルパープル</span></li>
+          </ul>
+      </div>
+      
+      <div class="question-card">
+          <h2>Q10<br>◉いずれかのギャザラークラスまたはクラフタークラスになってください。</h2>
+          <img class="main-image" src="Q10.png" alt="Q10画像">
+          <ul class="options">
+              <li><img src="10-1.png" alt="10-1"><span>木工師</span></li>
+              <li><img src="10-2.png" alt="10-2"><span>鍛冶師</span></li>
+              <li><img src="10-3.png" alt="10-3"><span>甲冑師</span></li>
+              <li><img src="10-4.png" alt="10-4"><span>彫金師</span></li>
+              <li><img src="10-5.png" alt="10-5"><span>革細工師</span></li>
+              <li><img src="10-6.png" alt="10-6"><span>裁縫師</span></li>
+              <li><img src="10-7.png" alt="10-7"><span>錬金術師</span></li>
+              <li><img src="10-8.png" alt="10-8"><span>調理師</span></li>
+              <li><img src="10-9.png" alt="10-9"><span>採掘師</span></li>
+              <li><img src="10-10.png" alt="10-10"><span>園芸師</span></li>
+              <li><img src="10-11.png" alt="10-11"><span>漁師</span></li>
+          </ul>
+      </div>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>◆ その他ルール及び補足事項 📜</h2>
+    <ul>
+      <li>
+          Q01「鉄仮面」の定義について<br>
+          頭の９割以上が覆われていて、素材が金属に見える装備全般<br>
+          お手数ですが事前準備をお願いします。<br>
+          「シャインゴールド」及び「シャインシルバー」代は別で記録しておいてご請求いただければ<br>
+          後日FC資金から補填させて頂きます。<br>
+          サンプル画像に使ってるのは「イミテイト・ミストビアドマスク」<br>
+          迷ったらマケボでこれを買おう。そんなに高くないぞ。
+      </li>
+      <li>
+          Q03「デイリーチュニック」について<br>
+          こちらもいずれか1つのみ用意しておいてください。<br>
+          モーグリ・チョコボ・サボテンダーの３種類はゴールドソーサーで購入可能。(全サイズ全種類5000MGP)<br>
+          マイカ・ザ・ムーはレアFATE報酬(交換場所はソリューション・ナイン)
+      </li>
+      <li>
+          Q06「極武器」について<br>
+          同様にいずれか1つのみ用意しておいてください。<br>
+          武器種は問いません。<br>
+          入手手段は製作またはマケボ購入です。<br>
+          極から直接する武器や箱から出てくる武器は光らないのでご注意を。
+      </li>
+      <li>
+          回答の変更について<br>
+          基本的には確定後に変更はしないようにお願いします。<br>
+          また、「逆張り宣言」後にそれを撤回することは出来ません。<br>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="section">
+    <h2>◆ 恒例のスクリーンショットについて 📸</h2>
+    <ul>
+      <li>
+          メインテーマ<br>
+          今回はQ05のお題になっている「拡張パッチタイトル」のコスチュームを準備してもらうことになります。<br>
+          こちらについては前回同様にフォームに載せる為のスクリーンショットも欲しいです。<br>
+          準備できる方は両方事前準備を、当日カメラマンにお任せの方はミラプリだけ準備をお願いします。<br>
+      </li>
+      <li>
+          おまけ<br>
+          ミラプリを考えて用意するのが負担になる人もいればそれを楽しいとする人もいるんじゃないかなと思います。<br>
+          以下に挙げるお題はすべて任意準備です。<br>
+          気が向いたら用意して各解答時にみんなに見せつけましょう。<br>
+          <div class="expansion-title dawnbreak">Q01「鉄仮面全身コーディネート」</div>
+          <div class="expansion-title dawnbreak">Q03「キャラクターチュニックのコーディネート」</div>
+          <div class="expansion-title dawnbreak">Q07「選択武器に合わせたコーディネート」</div>
+          <div class="expansion-title dawnbreak">Q09「カラフルチュニックのコーディネート」</div>
+          準備者が多かった項目(３人以上が準備してきたら)は前回と同じようにフォーム投票枠を設けます。
+      </li>
+    </ul>
+  </div>
+
+  <script>
+    function calculatePrize() {
+      const totalPrize = parseInt(document.getElementById('totalPrize').value, 10);
+      const participantCount = parseInt(document.getElementById('participantCount').value, 10);
+      const tableBody = document.getElementById('resultBody');
+      tableBody.innerHTML = '';
+
+      const patterns = [];
+
+      if ([4, 6, 8, 10, 12].includes(participantCount)) {
+        patterns.push({ winners: 2 });
+      } else if (participantCount === 9) {
+        patterns.push({ winners: 3 });
+      } else if ([5, 7, 11].includes(participantCount)) {
+        patterns.push({ winners: 1 });
+        patterns.push({ winners: 2 });
+      }
+
+      patterns.forEach(pattern => {
+        const losers = participantCount - pattern.winners;
+        const winnerShare = Math.floor((totalPrize * 0.7) / pattern.winners);
+        const loserShare = Math.floor((totalPrize * 0.1) / losers);
+
+        const row = `<tr>
+          <td>${pattern.winners}</td>
+          <td>${losers}</td>
+          <td>${winnerShare.toLocaleString()} ギル</td>
+          <td>${loserShare.toLocaleString()} ギル</td>
+        </tr>`;
+
+        tableBody.insertAdjacentHTML('beforeend', row);
+      });
+    }
+  </script>
+
+</body>
+</html>
